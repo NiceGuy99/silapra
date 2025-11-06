@@ -73,7 +73,7 @@
 
     <!-- Edit Order Modals -->
     @foreach($completedOrders as $order)
-        @include('partials.edit_order_modal', ['order' => $order])
+        @include('partials.edit_order_modal', ['order' => $order, 'officers' => $officers])
     @endforeach
 
     @push('scripts')

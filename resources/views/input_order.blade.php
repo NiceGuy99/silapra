@@ -257,6 +257,6 @@
 
 <!-- Edit Order Modals -->
 @foreach($orders as $order)
-    @include('partials.edit_order_modal', ['order' => $order])
+    @include('partials.edit_order_modal', ['order' => $order, 'officers' => $officers])
 @endforeach
 </x-app-layout>

@@ -68,7 +68,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($orders as $order)
+                            @forelse($allOrders as $order)
                             <tr>
                                 <td>{{ $order->nomor_rm }}</td>
                                 <td>{{ $order->nama_pasien }}</td>
@@ -130,8 +130,8 @@
 </x-admin-layout>
 
 <!-- Edit Order Modals -->
-@foreach($orders as $order)
-    @include('partials.edit_order_modal', ['order' => $order])
+@foreach($allOrders as $order)
+    @include('partials.edit_order_modal', ['order' => $order, 'officers' => $officers])
 @endforeach
 
 @push('scripts')
