@@ -37,6 +37,7 @@
                                         <th>Tujuan Ruangan</th>
                                         <th>User Request</th>
                                         <th>Asal Ruangan User</th>
+                                        <th>Petugas</th>
                                         <th>Tgl Permintaan</th>
                                         <th>Tgl Diterima</th>
                                         <th>Tgl Selesai</th>
@@ -53,6 +54,7 @@
                                         <td>{{ $order->tujuan_ruangan_mutasi }}</td>
                                         <td>{{ $order->user_request }}</td>
                                         <td>{{ $order->asal_ruangan_user_request }}</td>
+                                        <td>{{ $order->officer ? $order->officer->name : '-' }}</td>
                                         <td>{{ optional($order->tanggal_permintaan)->format('d/m/Y H:i') ?: '-' }}</td>
                                         <td>{{ optional($order->tanggal_diterima)->format('d/m/Y H:i') ?: '-' }}</td>
                                         <td>{{ optional($order->tanggal_selesai)->format('d/m/Y H:i') ?: '-' }}</td>
@@ -118,8 +120,24 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="asal_ruangan_mutasi" class="form-label">Asal Ruangan Mutasi</label>
-                                <input type="text" class="form-control" id="asal_ruangan_mutasi" name="asal_ruangan_mutasi" 
-                                    required placeholder="Masukkan asal ruangan">
+                                <select class="form-select" id="asal_ruangan_mutasi" name="asal_ruangan_mutasi" required>
+                                    <option value="">Pilih Asal Ruangan</option>
+                                    <option value="RANAP URANUS">RANAP URANUS</option>
+                                    <option value="RANAP JUPITER">RANAP JUPITER</option>
+                                    <option value="RANAP MARS">RANAP MARS</option>
+                                    <option value="RANAP MERKURIUS">RANAP MERKURIUS</option>
+                                    <option value="RANAP VENUS">RANAP VENUS</option>
+                                    <option value="ISOLASI">ISOLASI</option>
+                                    <option value="KAMAR OPERASI">KAMAR OPERASI</option>
+                                    <option value="ICU">ICU</option>
+                                    <option value="NICU">NICU</option>
+                                    <option value="PICU">PICU</option>
+                                    <option value="TRANSIT IGD">TRANSIT IGD</option>
+                                    <option value="RADIOLOGI">RADIOLOGI</option>
+                                    <option value="LABORATORIUM">LABORATORIUM</option>
+                                    <option value="MNE">MNE</option>
+                                    <option value="PERISTI">PERISTI</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -145,18 +163,25 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <label for="user_request" class="form-label">User Request</label>
-                                <input type="text" class="form-control" id="user_request" name="user_request" 
-                                    required placeholder="Masukkan nama user request">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="asal_ruangan_user_request" class="form-label">Asal Ruangan User Request</label>
-                                <input type="text" class="form-control" id="asal_ruangan_user_request" name="asal_ruangan_user_request" 
-                                    required placeholder="Masukkan asal ruangan user">
+                                <label class="form-label">Pilih Petugas (Opsional)</label>
+                                <div class="d-flex gap-3">
+                                    @foreach($officers as $officer)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="officer_id" id="officer{{ $officer->id }}" value="{{ $officer->id }}">
+                                            <label class="form-check-label" for="officer{{ $officer->id }}">
+                                                {{ $officer->name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="officer_id" id="officerNone" value="" checked>
+                                        <label class="form-check-label" for="officerNone">
+                                            Tidak Ada
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

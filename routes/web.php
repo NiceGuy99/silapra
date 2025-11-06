@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OfficerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,14 @@ Route::get('/dashboard', function () {
 // Admin and Petugas routes
 Route::middleware(['auth', 'verified', 'role:admin,petugas'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/completed-orders', [AdminController::class, 'completedOrders'])->name('admin.completed-orders');
+    Route::get('/admin/accepted-orders', [AdminController::class, 'acceptedOrders'])->name('admin.accepted-orders');
+
+    // Officer management routes (admin only)
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('officers', OfficerController::class)->except(['show', 'create', 'edit']);
+        Route::patch('/officers/{officer}/toggle-status', [OfficerController::class, 'toggleStatus'])->name('officers.toggle-status');
+    });
 });
 
 Route::middleware('auth')->group(function () {

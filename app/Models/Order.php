@@ -19,7 +19,8 @@ class Order extends Model
         'tanggal_permintaan',
         'tanggal_diterima',
         'tanggal_selesai',
-        'status'
+        'status',
+        'officer_id'
     ];
 
     protected $casts = [
@@ -29,4 +30,10 @@ class Order extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
+
+    // Relationship dengan officer
+    public function officer()
+    {
+        return $this->belongsTo(Officer::class);
+    }
 }

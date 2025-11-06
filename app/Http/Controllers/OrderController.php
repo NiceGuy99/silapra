@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Officer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::orderBy('created_at', 'desc')->get();
-        return view('input_order', compact('orders'));
+        $orders = Order::with('officer')->orderBy('created_at', 'desc')->get();
+        $officers = Officer::where('is_active', true)->get();
+        return view('input_order', compact('orders', 'officers'));
     }
 
     public function store(Request $request)
@@ -20,11 +23,13 @@ class OrderController extends Controller
             'nama_pasien' => 'required',
             'asal_ruangan_mutasi' => 'required',
             'tujuan_ruangan_mutasi' => 'required',
-            'user_request' => 'required',
-            'asal_ruangan_user_request' => 'required'
+            'officer_id' => 'nullable|exists:officers,id'
         ]);
 
         $data = $request->all();
+        // Auto-fill user data from logged-in user
+        $data['user_request'] = Auth::user()->name;
+        $data['asal_ruangan_user_request'] = Auth::user()->asal_ruangan;
         $data['tanggal_permintaan'] = now();
         $data['status'] = 'pending';
 
@@ -41,11 +46,12 @@ class OrderController extends Controller
             'tujuan_ruangan_mutasi' => 'required',
             'user_request' => 'required',
             'asal_ruangan_user_request' => 'required',
-            'status' => 'required|in:pending,process,completed,cancelled'
+            'status' => 'required|in:pending,process,completed,cancelled',
+            'officer_id' => 'nullable|exists:officers,id'
         ]);
 
         $data = $request->all();
-        
+
         // Update timestamps based on status changes
         if ($request->status === 'process' && is_null($order->tanggal_diterima)) {
             $data['tanggal_diterima'] = now();

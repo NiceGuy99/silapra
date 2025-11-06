@@ -29,7 +29,24 @@
                         </div>
                         <div class="col-md-6">
                             <label for="asal_ruangan_mutasi{{ $order->id }}" class="form-label">Asal Ruangan Mutasi</label>
-                            <input type="text" class="form-control" id="asal_ruangan_mutasi{{ $order->id }}" name="asal_ruangan_mutasi" value="{{ $order->asal_ruangan_mutasi }}" required>
+                            <select class="form-select" id="asal_ruangan_mutasi{{ $order->id }}" name="asal_ruangan_mutasi" required>
+                                <option value="">Pilih Asal Ruangan</option>
+                                <option value="RANAP URANUS" {{ $order->asal_ruangan_mutasi == 'RANAP URANUS' ? 'selected' : '' }}>RANAP URANUS</option>
+                                <option value="RANAP JUPITER" {{ $order->asal_ruangan_mutasi == 'RANAP JUPITER' ? 'selected' : '' }}>RANAP JUPITER</option>
+                                <option value="RANAP MARS" {{ $order->asal_ruangan_mutasi == 'RANAP MARS' ? 'selected' : '' }}>RANAP MARS</option>
+                                <option value="RANAP MERKURIUS" {{ $order->asal_ruangan_mutasi == 'RANAP MERKURIUS' ? 'selected' : '' }}>RANAP MERKURIUS</option>
+                                <option value="RANAP VENUS" {{ $order->asal_ruangan_mutasi == 'RANAP VENUS' ? 'selected' : '' }}>RANAP VENUS</option>
+                                <option value="ISOLASI" {{ $order->asal_ruangan_mutasi == 'ISOLASI' ? 'selected' : '' }}>ISOLASI</option>
+                                <option value="KAMAR OPERASI" {{ $order->asal_ruangan_mutasi == 'KAMAR OPERASI' ? 'selected' : '' }}>KAMAR OPERASI</option>
+                                <option value="ICU" {{ $order->asal_ruangan_mutasi == 'ICU' ? 'selected' : '' }}>ICU</option>
+                                <option value="NICU" {{ $order->asal_ruangan_mutasi == 'NICU' ? 'selected' : '' }}>NICU</option>
+                                <option value="PICU" {{ $order->asal_ruangan_mutasi == 'PICU' ? 'selected' : '' }}>PICU</option>
+                                <option value="TRANSIT IGD" {{ $order->asal_ruangan_mutasi == 'TRANSIT IGD' ? 'selected' : '' }}>TRANSIT IGD</option>
+                                <option value="RADIOLOGI" {{ $order->asal_ruangan_mutasi == 'RADIOLOGI' ? 'selected' : '' }}>RADIOLOGI</option>
+                                <option value="LABORATORIUM" {{ $order->asal_ruangan_mutasi == 'LABORATORIUM' ? 'selected' : '' }}>LABORATORIUM</option>
+                                <option value="MNE" {{ $order->asal_ruangan_mutasi == 'MNE' ? 'selected' : '' }}>MNE</option>
+                                <option value="PERISTI" {{ $order->asal_ruangan_mutasi == 'PERISTI' ? 'selected' : '' }}>PERISTI</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -70,6 +87,30 @@
                                 <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
                                 <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                             </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Pilih Petugas (Opsional)</label>
+                            <div class="d-flex gap-3">
+                                @foreach($officers as $officer)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="officer_id"
+                                            id="officer{{ $officer->id }}_{{ $order->id }}"
+                                            value="{{ $officer->id }}"
+                                            {{ $order->officer_id == $officer->id ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="officer{{ $officer->id }}_{{ $order->id }}">
+                                            {{ $officer->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="officer_id"
+                                        id="officerNone_{{ $order->id }}" value=""
+                                        {{ !$order->officer_id ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="officerNone_{{ $order->id }}">
+                                        Tidak Ada
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

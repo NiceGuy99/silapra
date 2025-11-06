@@ -65,8 +65,19 @@
                                     {{ __('Dashboard') }}
                                 </x-nav-link>
                                 <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
-                                    {{ __('Orders') }}
+                                    {{ __('Manage Orders') }}
                                 </x-nav-link>
+                                <x-nav-link :href="route('admin.accepted-orders')" :active="request()->routeIs('admin.accepted-orders')">
+                                    {{ __('Permintaan Diterima') }}
+                                </x-nav-link>
+                                <x-nav-link :href="route('admin.completed-orders')" :active="request()->routeIs('admin.completed-orders')">
+                                    {{ __('Pesanan Selesai') }}
+                                </x-nav-link>
+                                @if(Auth::user()->role === 'admin')
+                                <x-nav-link :href="route('officers.index')" :active="request()->routeIs('officers.*')">
+                                    {{ __('Kelola Petugas') }}
+                                </x-nav-link>
+                                @endif
                             </div>
                         </div>
 
