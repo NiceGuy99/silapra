@@ -31,6 +31,7 @@ Route::get('/dashboard', function () {
 // Admin and Petugas routes
 Route::middleware(['auth', 'verified', 'role:admin,petugas'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/accepted-requests', [AdminController::class, 'acceptedRequests'])->name('admin.accepted_requests');
 });
 
 Route::middleware('auth')->group(function () {
@@ -44,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
     Route::patch('/orders/{order}/accept', [OrderController::class, 'accept'])->name('orders.accept');
+    Route::patch('/orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');
 });
 
 require __DIR__.'/auth.php';

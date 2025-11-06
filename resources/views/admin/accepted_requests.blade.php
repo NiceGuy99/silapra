@@ -1,57 +1,17 @@
 <x-admin-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Daftar Permintaan Mutasi Pasien') }}
+            {{ __('Daftar Permintaan Diterima') }}
         </h2>
     </x-slot>
 
     <div class="container py-4">
-        <!-- Statistics Cards -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="card stats-card bg-primary bg-gradient text-white h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Permintaan</h5>
-                        <p class="display-4">{{ $totalOrders }}</p>
-                        <i class="fas fa-hospital-user position-absolute end-0 bottom-0 mb-3 me-3 opacity-50 fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stats-card bg-warning bg-gradient text-white h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Menunggu</h5>
-                        <p class="display-4">{{ $pendingOrders }}</p>
-                        <i class="fas fa-clock position-absolute end-0 bottom-0 mb-3 me-3 opacity-50 fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stats-card bg-info bg-gradient text-white h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Dalam Proses</h5>
-                        <p class="display-4">{{ $processingOrders }}</p>
-                        <i class="fas fa-spinner position-absolute end-0 bottom-0 mb-3 me-3 opacity-50 fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stats-card bg-success bg-gradient text-white h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Selesai</h5>
-                        <p class="display-4">{{ $completedOrders }}</p>
-                        <i class="fas fa-check-circle position-absolute end-0 bottom-0 mb-3 me-3 opacity-50 fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Orders List -->
         <div class="card custom-shadow">
             <div class="card-body">
-                <h5 class="card-title mb-3">Daftar Semua Permintaan</h5>
+                <h5 class="card-title mb-3">Daftar Permintaan Diterima (Dalam Proses)</h5>
                 <div class="table-responsive">
-                    <table id="ordersListTable" class="table table-hover">
+                    <table id="acceptedOrdersTable" class="table table-hover">
                         <thead>
                             <tr>
                                 <th>No. RM</th>
@@ -68,7 +28,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($allOrders as $order)
+                            @forelse($acceptedOrders as $order)
                             <tr>
                                 <td>{{ $order->nomor_rm }}</td>
                                 <td>{{ $order->nama_pasien }}</td>
@@ -86,22 +46,22 @@
                                 </td>
                                 <td class="actions-col align-middle text-center">
                                     <div class="btn-group" role="group">
-                                        @if($order->status === 'pending')
-                                        <!-- Accept Button -->
-                                        <form action="{{ route('orders.accept', $order->id) }}" method="POST" class="d-inline accept-form">
+                                        @if($order->status === 'process')
+                                        <!-- Complete Button -->
+                                        <form action="{{ route('orders.complete', $order->id) }}" method="POST" class="d-inline complete-form">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="button" class="btn btn-sm btn-success accept-order" title="Terima Order">
-                                                <i class="fas fa-check"></i> Terima
+                                            <button type="button" class="btn btn-sm btn-success complete-order" title="Selesaikan Order">
+                                                <i class="fas fa-check-circle"></i> Selesai
                                             </button>
                                         </form>
                                         @endif
-                                        
+
                                         <!-- Edit Button -->
                                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editOrderModal{{ $order->id }}" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        
+
                                         <!-- Delete Button -->
                                         <form action="{{ route('orders.destroy', $order->id) }}" method="POST" class="d-inline">
                                             @csrf
@@ -117,7 +77,7 @@
                             <tr>
                                 <td colspan="11" class="text-center py-4">
                                     <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">Belum ada data permintaan mutasi pasien</p>
+                                    <p class="text-muted">Belum ada permintaan yang diterima</p>
                                 </td>
                             </tr>
                             @endforelse
@@ -130,18 +90,18 @@
 </x-admin-layout>
 
 <!-- Edit Order Modals -->
-@foreach($allOrders as $order)
+@foreach($acceptedOrders as $order)
     @include('partials.edit_order_modal', ['order' => $order])
 @endforeach
 
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize DataTable for Orders List
+        // Initialize DataTable for Accepted Orders List
         if (typeof $.fn.DataTable !== 'undefined') {
-            $('#ordersListTable').DataTable({
+            $('#acceptedOrdersTable').DataTable({
                 responsive: true,
-                order: [[6, 'desc']], // Sort by tanggal permintaan
+                order: [[7, 'desc']], // Sort by tanggal diterima
                 pageLength: 25,
                 language: {
                     search: "<i class='fas fa-search'></i> Cari:",
@@ -161,19 +121,19 @@
             });
         }
 
-        // Accept order confirmation (pending -> process)
-        document.querySelectorAll('.accept-order').forEach(function(button){
+        // Complete order confirmation (process -> completed)
+        document.querySelectorAll('.complete-order').forEach(function(button){
             button.addEventListener('click', function(e){
                 e.preventDefault();
-                const form = this.closest('.accept-form');
+                const form = this.closest('.complete-form');
                 Swal.fire({
-                    title: 'Terima Order?',
-                    text: "Order ini akan diproses!",
+                    title: 'Selesaikan Order?',
+                    text: "Order ini akan ditandai sebagai selesai!",
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#28a745',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Ya, Terima!',
+                    confirmButtonText: 'Ya, Selesaikan!',
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {

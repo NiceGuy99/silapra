@@ -78,4 +78,20 @@ class OrderController extends Controller
 
         return back()->with('success', 'Order berhasil diterima dan sedang diproses!');
     }
+
+    public function complete(Order $order)
+    {
+        // Validasi bahwa order dalam status process
+        if ($order->status !== 'process') {
+            return back()->with('error', 'Order tidak dapat diselesaikan. Status harus "Dalam Proses".');
+        }
+
+        // Update status menjadi completed dan set tanggal selesai
+        $order->update([
+            'status' => 'completed',
+            'tanggal_selesai' => now()
+        ]);
+
+        return back()->with('success', 'Order berhasil diselesaikan!');
+    }
 }

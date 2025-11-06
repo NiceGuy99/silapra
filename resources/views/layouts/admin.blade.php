@@ -64,6 +64,9 @@
                                 <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                                     {{ __('Dashboard') }}
                                 </x-nav-link>
+                                <x-nav-link :href="route('admin.accepted_requests')" :active="request()->routeIs('admin.accepted_requests')">
+                                    {{ __('Permintaan Diterima') }}
+                                </x-nav-link>
                                 <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
                                     {{ __('Orders') }}
                                 </x-nav-link>
