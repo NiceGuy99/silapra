@@ -1,0 +1,55 @@
+// Fonts
+@import url("https://fonts.bunny.net/css?family=Nunito");
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+// DataTables
+@import "datatables.net-bs5/css/dataTables.bootstrap5.css";
+@import "datatables.net-responsive-bs5/css/responsive.bootstrap5.css";
+
+// Custom styles
+.navbar-brand {
+    font-weight: bold;
+}
+
+.stats-card {
+    transition: transform 0.3s ease;
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.custom-shadow {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-badge {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+
+    &.pending {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+    &.processing {
+        background-color: #dbeafe;
+        color: #1e40af;
+    }
+    &.completed {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+    &.cancelled {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+}
